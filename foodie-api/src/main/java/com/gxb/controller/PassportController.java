@@ -4,17 +4,21 @@ import com.gxb.pojo.Users;
 import com.gxb.pojo.bo.UserBO;
 import com.gxb.service.UserService;
 import com.gxb.utils.JSONResult;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("passport")
+@Api(value = "注册登录",tags = {"用于注册登录的接口"})
 public class PassportController {
 
     @Autowired
     private UserService userService;
 
+    @ApiOperation(value = "用户名是否存在",notes = "用户名是否存在",httpMethod = "GET")
     @GetMapping("usernameIsExist")
     public JSONResult usernameIsExist(@RequestParam("username") String username) {
         //判断用户名不能为空
@@ -30,6 +34,7 @@ public class PassportController {
         return JSONResult.ok();
     }
 
+    @ApiOperation(value = "用户注册",notes = "用户注册",httpMethod = "POST")
     @PostMapping("regist")
     public JSONResult regist(@RequestBody UserBO userBO) {
         String username = userBO.getUsername();
