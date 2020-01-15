@@ -37,4 +37,47 @@ FROM
 WHERE
 	f.father_id = #{rootCategoryId}
   </select>
+
+  <resultMap id="myNewItemsVO" type="com.gxb.pojo.vo.NewItemsVO">
+    <id column="rootCatId" property="rootCatId"></id>
+    <result column="rootCatName" property="rootCatName"></result>
+    <result column="slogan" property="slogan"></result>
+    <result column="catImage" property="catImage"></result>
+    <result column="bgColor" property="bgColor"></result>
+    <!--
+      collection 标签：用于定义关联的list集合类型的封装规则
+      property：对应三级分类的list属性名
+      ofType：集合的类型，三级分类的vo
+    -->
+    <collection property="simpleItemList" ofType="com.gxb.pojo.vo.SimpleItemVO">
+      <id column="itemId" property="itemId"></id>
+      <result column="itemName" property="itemName"></result>
+      <result column="itemUrl" property="itemUrl"></result>
+    </collection>
+  </resultMap>
+
+
+  <select id="getSixNewItemsLazy" resultMap="myNewItemsVO" parameterType="map">
+        SELECT
+        f.id rootCatId,
+        f.`name` rootCatName,
+        f.slogan slogan,
+        f.cat_image catImage,
+        f.bg_color bgColor,
+        i.id itemId,
+        i.item_name itemName,
+        ii.url itemUrl,
+        i.created_time createdTime
+    FROM
+        category f
+        LEFT JOIN items i ON f.id = i.root_cat_id
+        LEFT JOIN items_img ii ON i.id = ii.item_id
+    WHERE
+        f.type = 1
+        AND i.root_cat_id = #{paramsMap.rootCatId}
+        AND ii.is_main = 1
+    ORDER BY
+        i.created_time DESC
+        LIMIT 0,6
+  </select>
 </mapper>

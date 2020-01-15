@@ -4,6 +4,7 @@ import com.gxb.enums.YesOrNo;
 import com.gxb.pojo.Carousel;
 import com.gxb.pojo.Category;
 import com.gxb.pojo.vo.CategoryVO;
+import com.gxb.pojo.vo.NewItemsVO;
 import com.gxb.service.CarouselService;
 import com.gxb.service.CategoryService;
 import com.gxb.utils.JSONResult;
@@ -54,5 +55,17 @@ public class IndexController {
         }
         List<CategoryVO> subCatList = categoryService.getSubCatList(rootCatId);
         return JSONResult.ok(subCatList);
+    }
+
+    @ApiOperation(value = "查询每个一级分类下的最新6条商品数据",notes = "查询每个一级分类下的最新6条商品数据",httpMethod = "GET")
+    @GetMapping("sixNewItems/{rootCatId}")
+    public JSONResult sixNewItems(
+            @ApiParam(name = "rootCatId",value = "一级分类id",required = true)
+            @PathVariable("rootCatId") Integer rootCatId) {
+        if (rootCatId == null || "".equals(rootCatId)) {
+            return JSONResult.errorMsg("分类不存在");
+        }
+        List<NewItemsVO> sixNewItemsLazy = categoryService.getSixNewItemsLazy(rootCatId);
+        return JSONResult.ok(sixNewItemsLazy);
     }
 }
