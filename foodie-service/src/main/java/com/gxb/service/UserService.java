@@ -9,4 +9,6 @@ public interface UserService {
 
     Users createUser(UserBO userBO);
 
+    Users queryUserForLogin(String username,String password);
 }
+

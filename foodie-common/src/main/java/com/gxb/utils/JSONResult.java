@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  *
  * @Title: JSONResult.java
- * @Package com.imooc.utils
+ * @Package com..utils
  * @Description: 自定义响应数据结构
  * 				本类可提供给 H5/ios/安卓/公众号/小程序 使用
  * 				前端接受此类数据（json object)后，可自行根据业务去实现相关功能
@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 				555：异常抛出信息
  * 				556: 用户qq校验异常
  * @Copyright: Copyright (c) 2020
- * @Company: www.imooc.com
+ * @Company: www..com
  * @author 慕课网 - 风间影月
  * @version V1.0
  */

@@ -3,12 +3,17 @@ package com.gxb.controller;
 import com.gxb.pojo.Users;
 import com.gxb.pojo.bo.UserBO;
 import com.gxb.service.UserService;
+import com.gxb.utils.CookieUtils;
 import com.gxb.utils.JSONResult;
+import com.gxb.utils.JsonUtils;
+import com.gxb.utils.MD5Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("passport")
@@ -36,7 +41,7 @@ public class PassportController {
 
     @ApiOperation(value = "用户注册",notes = "用户注册",httpMethod = "POST")
     @PostMapping("regist")
-    public JSONResult regist(@RequestBody UserBO userBO) {
+    public JSONResult regist(@RequestBody UserBO userBO,HttpServletRequest request,HttpServletResponse response) {
         String username = userBO.getUsername();
         String password = userBO.getPassword();
         String confirmPwd = userBO.getConfirmPassword();
@@ -65,7 +70,65 @@ public class PassportController {
         }
         // 4. 实现注册
         Users userResult = userService.createUser(userBO);
+
+        userResult = setNullProperty(userResult);
+
+        CookieUtils.setCookie(request, response, "user",
+                JsonUtils.objectToJson(userResult), true);
+
         return JSONResult.ok();
     }
-}
 
+    @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
+    @PostMapping("/login")
+    public JSONResult login(@RequestBody UserBO userBO,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response) throws Exception {
+
+        String username = userBO.getUsername();
+        String password = userBO.getPassword();
+
+        // 0. 判断用户名和密码必须不为空
+        if (StringUtils.isBlank(username) ||
+                StringUtils.isBlank(password)) {
+            return JSONResult.errorMsg("用户名或密码不能为空");
+        }
+
+        // 1. 实现登录
+        Users userResult = userService.queryUserForLogin(username,
+                MD5Utils.getMD5Str(password));
+
+        if (userResult == null) {
+            return JSONResult.errorMsg("用户名或密码不正确");
+        }
+
+        userResult = setNullProperty(userResult);
+
+        CookieUtils.setCookie(request, response, "user",
+                JsonUtils.objectToJson(userResult), true);
+
+        // TODO 生成用户token，存入redis会话
+        // TODO 同步购物车数据
+        return JSONResult.ok(userResult);
+    }
+
+    @ApiOperation(value = "用户退出登录", notes = "用户退出登录", httpMethod = "POST")
+    @PostMapping("/logout")
+    public JSONResult logout(@RequestParam String userId,HttpServletRequest request,HttpServletResponse response) {
+        //清除用户相关信息的cookie
+        CookieUtils.deleteCookie(request, response, "user");
+        //TODO 用户退出登录，需要清空购物车
+        //TODO 分布式会话中需要清除用户数据
+        return JSONResult.ok();
+    }
+
+    private Users setNullProperty(Users userResult) {
+        userResult.setPassword(null);
+        userResult.setMobile(null);
+        userResult.setEmail(null);
+        userResult.setCreatedTime(null);
+        userResult.setUpdatedTime(null);
+        userResult.setBirthday(null);
+        return userResult;
+    }
+}

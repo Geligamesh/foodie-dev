@@ -8,7 +8,7 @@ public class MD5Utils {
 	/**
 	 *
 	 * @Title: MD5Utils.java
-	 * @Package com.imooc.utils
+	 * @Package com..utils
 	 * @Description: 对字符串进行md5加密
 	 */
 	public static String getMD5Str(String strValue) throws Exception {
@@ -19,7 +19,7 @@ public class MD5Utils {
 
 	public static void main(String[] args) {
 		try {
-			String md5 = getMD5Str("imooc");
+			String md5 = getMD5Str("");
 			System.out.println(md5);
 		} catch (Exception e) {
 			e.printStackTrace();
