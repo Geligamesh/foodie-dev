@@ -115,7 +115,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
-    private Integer getCommentCounts(String itemId,Integer level) {
+    public Integer getCommentCounts(String itemId,Integer level) {
         ItemsComments condition = new ItemsComments();
         condition.setItemId(itemId);
         if (level != null) {
