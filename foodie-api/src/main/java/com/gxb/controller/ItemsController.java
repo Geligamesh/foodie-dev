@@ -5,6 +5,7 @@ import com.gxb.pojo.vo.CommentLevelCountsVO;
 import com.gxb.pojo.vo.ItemInfoVO;
 import com.gxb.service.ItemService;
 import com.gxb.utils.JSONResult;
+import com.gxb.utils.PagedGridResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -12,12 +13,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.PageFormat;
 import java.util.List;
 
 @RestController
 @RequestMapping("items")
 @Api(value = "商品接口",tags = {"商品信息展示的相关接口"})
-public class ItemsController {
+public class ItemsController extends BaseController {
 
     @Autowired
     private ItemService itemService;
@@ -54,4 +56,52 @@ public class ItemsController {
         CommentLevelCountsVO commentLevelCountsVO = itemService.queryCommentCounts(itemId);
         return JSONResult.ok(commentLevelCountsVO);
      }
+
+    @ApiOperation(value = "查询商品评价",notes = "查询商品评价",httpMethod = "GET")
+    @GetMapping("comments")
+    public JSONResult comments(
+            @ApiParam(name = "itemId",value = "商品id",required = true)
+            @RequestParam("itemId") String itemId,
+            @ApiParam(name = "level",value = "评价等级")
+            @RequestParam("level")Integer level,
+            @ApiParam(name = "page",value = "查询下一页的第几页")
+            @RequestParam(value = "page",required = false,defaultValue = "1")Integer page,
+            @ApiParam(name = "pageSize",value = "分页的每一页显示的条数")
+            @RequestParam(value = "pageSize",required = false,defaultValue = "10")Integer pageSize) {
+        if (StringUtils.isBlank(itemId)) {
+            return JSONResult.errorMsg( null);
+        }
+        if (page == null || page <= 0) {
+            page = 1;
+        }
+        if (pageSize == null || pageSize <= 0) {
+            pageSize = COMMENT_PAGE_SIZE;
+        }
+        PagedGridResult pagedGridResult = itemService.queryPagedComments(itemId, level, page, pageSize);
+        return JSONResult.ok(pagedGridResult);
+    }
+
+    @ApiOperation(value = "搜索商品列表",notes = "搜索商品列表",httpMethod = "GET")
+    @GetMapping("search")
+    public JSONResult search(
+            @ApiParam(name = "keywords",value = "关键字",required = true)
+            @RequestParam("keywords") String keywords,
+            @ApiParam(name = "sort",value = "排序")
+            @RequestParam("sort")String sort,
+            @ApiParam(name = "page",value = "查询下一页的第几页")
+            @RequestParam(value = "page",required = false,defaultValue = "1")Integer page,
+            @ApiParam(name = "pageSize",value = "分页的每一页显示的条数")
+            @RequestParam(value = "pageSize",required = false,defaultValue = "10")Integer pageSize) {
+        if (StringUtils.isBlank(keywords)) {
+            return JSONResult.errorMsg( null);
+        }
+        if (page == null || page <= 0) {
+            page = 1;
+        }
+        if (pageSize == null || pageSize <= 0) {
+            pageSize = PAGE_SIZE;
+        }
+        PagedGridResult pagedGridResult = itemService.searchItems(keywords, sort, page, pageSize);
+        return JSONResult.ok(pagedGridResult);
+    }
 }

@@ -1,17 +1,21 @@
 package com.gxb.service.Impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.gxb.enums.CommentLevel;
 import com.gxb.mapper.*;
 import com.gxb.pojo.*;
 import com.gxb.pojo.vo.CommentLevelCountsVO;
 import com.gxb.pojo.vo.ItemCommentVO;
+import com.gxb.pojo.vo.SearchItemsVO;
 import com.gxb.service.ItemService;
+import com.gxb.utils.DesensitizationUtil;
+import com.gxb.utils.PagedGridResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,11 +111,52 @@ public class ItemServiceImpl implements ItemService {
      * @return
      */
     @Override
-    public List<ItemCommentVO> queryPagedComments(String itemId, String level) {
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public PagedGridResult queryPagedComments(String itemId,
+                                                  Integer level,
+                                                  Integer page,
+                                                  Integer pageSize) {
         Map<String,Object> map = new HashMap<>();
         map.put("itemId", itemId);
         map.put("level", level);
-        return itemsMapperCustom.queryItemComments(map);
+        /**
+         * 分页
+         */
+        PageHelper.startPage(page, pageSize);
+        List<ItemCommentVO> list = itemsMapperCustom.queryItemComments(map);
+        //脱敏操作
+        list.forEach(itemCommentVO -> itemCommentVO.setNickname(DesensitizationUtil.commonDisplay(itemCommentVO.getNickname())));
+
+        return setterPagedGrid(list, page);
+    }
+
+    /**
+     * 搜索商品列表（分页）
+     * @param keywords
+     * @param sort
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public PagedGridResult searchItems(String keywords, String sort, Integer page, Integer pageSize) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("keywords", keywords);
+        map.put("sort", sort);
+        PageHelper.startPage(page, pageSize);
+        List<SearchItemsVO> searchItemsVOS = itemsMapperCustom.searchItems(map);
+        return setterPagedGrid(searchItemsVOS, page);
+    }
+
+    private PagedGridResult setterPagedGrid(List<?> list,Integer page){
+        PageInfo pageList = new PageInfo<>(list);
+        PagedGridResult grid = new PagedGridResult();
+        grid.setPage(page);
+        grid.setRows(list);
+        grid.setTotal(pageList.getPages());
+        grid.setRecords(pageList.getTotal());
+        return grid;
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)

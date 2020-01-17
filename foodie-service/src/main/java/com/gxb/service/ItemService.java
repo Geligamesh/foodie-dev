@@ -6,6 +6,7 @@ import com.gxb.pojo.ItemsParam;
 import com.gxb.pojo.ItemsSpec;
 import com.gxb.pojo.vo.CommentLevelCountsVO;
 import com.gxb.pojo.vo.ItemCommentVO;
+import com.gxb.utils.PagedGridResult;
 
 import java.util.List;
 
@@ -51,5 +52,15 @@ public interface ItemService {
      * @param level
      * @return
      */
-    List<ItemCommentVO> queryPagedComments(String itemId,String level);
+    PagedGridResult queryPagedComments(String itemId, Integer level, Integer page, Integer pageSize);
+
+    /**
+     * 搜索商品列表（分页）
+     * @param keywords
+     * @param sort
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    PagedGridResult searchItems(String keywords,String sort,Integer page,Integer pageSize);
 }
