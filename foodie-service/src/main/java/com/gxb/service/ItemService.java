@@ -5,7 +5,6 @@ import com.gxb.pojo.ItemsImg;
 import com.gxb.pojo.ItemsParam;
 import com.gxb.pojo.ItemsSpec;
 import com.gxb.pojo.vo.CommentLevelCountsVO;
-import com.gxb.pojo.vo.ItemCommentVO;
 import com.gxb.pojo.vo.ShopcartVO;
 import com.gxb.utils.PagedGridResult;
 
