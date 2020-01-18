@@ -3,6 +3,7 @@ package com.gxb.controller;
 import com.gxb.pojo.*;
 import com.gxb.pojo.vo.CommentLevelCountsVO;
 import com.gxb.pojo.vo.ItemInfoVO;
+import com.gxb.pojo.vo.ShopcartVO;
 import com.gxb.service.ItemService;
 import com.gxb.utils.JSONResult;
 import com.gxb.utils.PagedGridResult;
@@ -12,8 +13,6 @@ import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.awt.print.PageFormat;
 import java.util.List;
 
 @RestController
@@ -104,4 +103,42 @@ public class ItemsController extends BaseController {
         PagedGridResult pagedGridResult = itemService.searchItems(keywords, sort, page, pageSize);
         return JSONResult.ok(pagedGridResult);
     }
+
+    @ApiOperation(value = "通过分类id搜索商品列表",notes = "通过分类id搜索商品列表",httpMethod = "GET")
+    @GetMapping("catItems")
+    public JSONResult searchByCatId(
+            @ApiParam(name = "catId",value = "三级分类id",required = true)
+            @RequestParam("catId") Integer catId,
+            @ApiParam(name = "sort",value = "排序")
+            @RequestParam("sort")String sort,
+            @ApiParam(name = "page",value = "查询下一页的第几页")
+            @RequestParam(value = "page",required = false,defaultValue = "1")Integer page,
+            @ApiParam(name = "pageSize",value = "分页的每一页显示的条数")
+            @RequestParam(value = "pageSize",required = false,defaultValue = "10")Integer pageSize) {
+        if (catId == null) {
+            return JSONResult.errorMsg("分类id不能为空");
+        }
+        if (page == null || page <= 0) {
+            page = 1;
+        }
+        if (pageSize == null || pageSize <= 0) {
+            pageSize = PAGE_SIZE;
+        }
+        PagedGridResult pagedGridResult = itemService.searchItemsByThirdCatId(catId, sort, page, pageSize);
+        return JSONResult.ok(pagedGridResult);
+    }
+
+
+    //用于用户长时间未登录网站，刷新购物车中的数据（主要是商品价格），类似淘宝京东
+    @ApiOperation(value = "根据商品规格ids查找最新的商品数据",notes = "根据商品规格ids查找最新的商品数据",tags = {"根据商品规格ids查找最新的商品数据"},httpMethod = "POST")
+    @GetMapping("refresh")
+    public JSONResult add(@RequestParam("itemSpecIds")
+                          @ApiParam(name = "itemSpecIds",value = "拼接的规格ids",required = true,example = "1001,1002,1005") String itemSpecIds) {
+        if (StringUtils.isBlank(itemSpecIds)) {
+            return JSONResult.ok();
+        }
+        List<ShopcartVO> shopcartVOS = itemService.queryItemsBySpecIds(itemSpecIds);
+        return JSONResult.ok(shopcartVOS);
+    }
+
 }

@@ -6,6 +6,7 @@ import com.gxb.pojo.ItemsParam;
 import com.gxb.pojo.ItemsSpec;
 import com.gxb.pojo.vo.CommentLevelCountsVO;
 import com.gxb.pojo.vo.ItemCommentVO;
+import com.gxb.pojo.vo.ShopcartVO;
 import com.gxb.utils.PagedGridResult;
 
 import java.util.List;
@@ -63,4 +64,21 @@ public interface ItemService {
      * @return
      */
     PagedGridResult searchItems(String keywords,String sort,Integer page,Integer pageSize);
+
+    /**
+     * 根据分类id搜欧索商品列表（分页）
+     * @param catId
+     * @param sort
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    PagedGridResult searchItemsByThirdCatId(Integer catId,String sort,Integer page,Integer pageSize);
+
+    /**
+     * 根据规格ids查询最新的购物车中商品数据（用于刷新渲染购物车中的商品数据）
+     * @param specIds
+     * @return
+     */
+    List<ShopcartVO> queryItemsBySpecIds(String specIds);
 }

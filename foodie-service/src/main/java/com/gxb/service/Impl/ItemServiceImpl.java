@@ -8,6 +8,7 @@ import com.gxb.pojo.*;
 import com.gxb.pojo.vo.CommentLevelCountsVO;
 import com.gxb.pojo.vo.ItemCommentVO;
 import com.gxb.pojo.vo.SearchItemsVO;
+import com.gxb.pojo.vo.ShopcartVO;
 import com.gxb.service.ItemService;
 import com.gxb.utils.DesensitizationUtil;
 import com.gxb.utils.PagedGridResult;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,6 +150,37 @@ public class ItemServiceImpl implements ItemService {
         PageHelper.startPage(page, pageSize);
         List<SearchItemsVO> searchItemsVOS = itemsMapperCustom.searchItems(map);
         return setterPagedGrid(searchItemsVOS, page);
+    }
+
+    /**
+     * 根据分类id搜欧索商品列表（分页）
+     * @param catId
+     * @param sort
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public PagedGridResult searchItemsByThirdCatId(Integer catId, String sort, Integer page, Integer pageSize) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("catId", catId);
+        map.put("sort", sort);
+        PageHelper.startPage(page, pageSize);
+        List<SearchItemsVO> searchItemsVOS = itemsMapperCustom.searchItems(map);
+        return setterPagedGrid(searchItemsVOS, page);
+    }
+
+    /**
+     * 根据规格ids查询最新的购物车中商品数据（用于刷新渲染购物车中的商品数据）
+     * @param specIds
+     * @return
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public List<ShopcartVO> queryItemsBySpecIds(String specIds) {
+        String[] specIdsList = specIds.split(",");
+        return itemsMapperCustom.queryItemsBySpecIds(Arrays.asList(specIdsList));
     }
 
     private PagedGridResult setterPagedGrid(List<?> list,Integer page){
