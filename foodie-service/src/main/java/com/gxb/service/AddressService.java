@@ -10,4 +10,10 @@ public interface AddressService {
     List<UserAddress> queryAll(String userId);
 
     void addNewUserAddress(AddressBO addressBO);
+
+    void updateUserAddress(AddressBO addressBO);
+
+    void deleteUserAddress(String userId,String addressId);
+
+    void deleteUserAddressToBeDefault(String userId,String addressId);
 }

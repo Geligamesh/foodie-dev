@@ -50,6 +50,44 @@ public class AddressController {
         return JSONResult.ok();
     }
 
+    @ApiOperation(value = "用户修改地址",notes = "用户修改地址",tags = {"用户修改地址"},httpMethod = "POST")
+    @PostMapping("update")
+    public JSONResult update(@RequestBody AddressBO addressBO) {
+
+        if (StringUtils.isBlank(addressBO.getAddressId())) {
+            return JSONResult.errorMsg("修改地址错误:addressId不能为空");
+        }
+
+        JSONResult jsonResult = this.checkAddress(addressBO);
+        if (jsonResult.getStatus() != 200) {
+            return jsonResult;
+        }
+        addressService.updateUserAddress(addressBO);
+        return JSONResult.ok();
+    }
+
+    @ApiOperation(value = "用户删除地址",notes = "用户删除地址",tags = {"用户删除地址"},httpMethod = "POST")
+    @PostMapping("delete")
+    public JSONResult delete(@RequestParam("userId") String userId,@RequestParam("addressId") String addressId) {
+
+        if (StringUtils.isBlank(userId) || StringUtils.isBlank(addressId)) {
+            return JSONResult.errorMsg("");
+        }
+        addressService.deleteUserAddress(userId, addressId);
+        return JSONResult.ok();
+    }
+
+    @ApiOperation(value = "用户设置默认地址",notes = "用户设置默认地址",tags = {"用户设置默认地址"},httpMethod = "POST")
+    @PostMapping("setDefalut")
+    public JSONResult setDefault(@RequestParam("userId") String userId,@RequestParam("addressId") String addressId) {
+
+        if (StringUtils.isBlank(userId) || StringUtils.isBlank(addressId)) {
+            return JSONResult.errorMsg("");
+        }
+        addressService.deleteUserAddressToBeDefault(userId, addressId);
+        return JSONResult.ok();
+    }
+
     private JSONResult checkAddress(AddressBO addressBO) {
         String receiver = addressBO.getReceiver();
         if (StringUtils.isBlank(receiver)) {
@@ -84,4 +122,6 @@ public class AddressController {
 
         return JSONResult.ok();
     }
+
+
 }
