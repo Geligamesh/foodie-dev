@@ -11,12 +11,18 @@ public enum OrderStatusEnum {
 	SUCCESS(40, "交易成功"),
 	CLOSE(50, "交易关闭");
 
-	public final Integer type;
-	public final String value;
+	private final Integer type;
+	private final String value;
 
 	OrderStatusEnum(Integer type, String value){
 		this.type = type;
 		this.value = value;
 	}
 
-}
+	public Integer getType() {
+		return type;
+	}
+
+	public String getValue() {
+		return value;
+	}}

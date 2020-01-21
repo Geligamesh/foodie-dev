@@ -3,6 +3,7 @@ package com.gxb.service.Impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.gxb.enums.CommentLevel;
+import com.gxb.enums.YesOrNo;
 import com.gxb.mapper.*;
 import com.gxb.pojo.*;
 import com.gxb.pojo.vo.CommentLevelCountsVO;
@@ -181,6 +182,43 @@ public class ItemServiceImpl implements ItemService {
     public List<ShopcartVO> queryItemsBySpecIds(String specIds) {
         String[] specIdsList = specIds.split(",");
         return itemsMapperCustom.queryItemsBySpecIds(Arrays.asList(specIdsList));
+    }
+
+    /**
+     * 根据规格id获取具体的规格信息
+     * @param specId
+     * @return
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public ItemsSpec queryItemSpecById(String specId) {
+        return itemsSpecMapper.selectByPrimaryKey(specId);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public String queryItemMainImgById(String itemId) {
+        ItemsImg itemsImg = new ItemsImg();
+        itemsImg.setId(itemId);
+        itemsImg.setIsMain(YesOrNo.YES.getType());
+        ItemsImg result = itemsImgMapper.selectOne(itemsImg);
+        return result != null ? result.getUrl() : "";
+    }
+
+    /**
+     * 减少库存
+     * @param specId
+     * @param buyCounts
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void decreaseItemSpecStock(String specId, Integer buyCounts) {
+        //synchronized 集群下无用，性能低下
+        //使用分布式锁
+        int result = itemsMapperCustom.decreaseItemSpecStock(specId, buyCounts);
+        if (result != 1) {
+            throw new RuntimeException("订单创建失败,原因:存库不足!");
+        }
     }
 
     private PagedGridResult setterPagedGrid(List<?> list,Integer page){

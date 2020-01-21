@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import tk.mybatis.mapper.entity.Example;
-
 import java.util.Date;
 import java.util.List;
 
@@ -96,5 +94,20 @@ public class AddressServiceImpl implements AddressService {
         defaultUserAddress.setId(addressId);
         defaultUserAddress.setIsDefault(YesOrNo.YES.getType());
         userAddressMapper.updateByPrimaryKeySelective(defaultUserAddress);
+    }
+
+    /**
+     * 根据userid和addressId查询具体地址信息
+     * @param userId
+     * @param addressId
+     * @return
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public UserAddress queryUserAddress(String userId, String addressId) {
+        UserAddress userAddress = new UserAddress();
+        userAddress.setUserId(userId);
+        userAddress.setId(addressId);
+        return userAddressMapper.selectOne(userAddress);
     }
 }

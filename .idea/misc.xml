@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/foodie-payment" />
+    <file type="web" url="file://E:/迅雷下载/【同步更新】Java架构师成长直通车/03 源码/Architect-Stage-1-Monolith-master/architect-stage-1-monolith/第1阶段单体架构/支付中心源码/foodie-payment" />
+  </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
