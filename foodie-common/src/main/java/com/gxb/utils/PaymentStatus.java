@@ -18,4 +18,10 @@ public enum PaymentStatus {
 		this.value = value;
 	}
 
-}
+	public Integer getType() {
+		return type;
+	}
+
+	public String getValue() {
+		return value;
+	}}

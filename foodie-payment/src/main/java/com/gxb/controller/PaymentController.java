@@ -128,7 +128,7 @@ public class PaymentController {
 		log.info("wxPayResource:{}", wxPayResource.toString());
 
 		// 根据订单ID和用户ID查询订单详情
-    	Orders waitPayOrder = paymentOrderService.queryOrderByStatus(merchantUserId, merchantOrderId, PaymentStatus.WAIT_PAY.type);
+    	Orders waitPayOrder = paymentOrderService.queryOrderByStatus(merchantUserId, merchantOrderId, PaymentStatus.WAIT_PAY.getType());
     	log.info("orders:{}", waitPayOrder.toString());
 
 
