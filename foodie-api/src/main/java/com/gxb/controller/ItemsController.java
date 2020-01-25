@@ -74,7 +74,7 @@ public class ItemsController extends BaseController {
             page = 1;
         }
         if (pageSize == null || pageSize <= 0) {
-            pageSize = COMMENT_PAGE_SIZE;
+            pageSize = COMMON_PAGE_SIZE;
         }
         PagedGridResult pagedGridResult = itemService.queryPagedComments(itemId, level, page, pageSize);
         return JSONResult.ok(pagedGridResult);

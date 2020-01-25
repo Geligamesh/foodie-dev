@@ -199,7 +199,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(propagation = Propagation.SUPPORTS)
     public String queryItemMainImgById(String itemId) {
         ItemsImg itemsImg = new ItemsImg();
-        itemsImg.setId(itemId);
+        itemsImg.setItemId(itemId);
         itemsImg.setIsMain(YesOrNo.YES.getType());
         ItemsImg result = itemsImgMapper.selectOne(itemsImg);
         return result != null ? result.getUrl() : "";
