@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -32,7 +33,8 @@ public class MyCommentsController extends BaseController {
     @ApiOperation(value = "查询订单信息",notes = "查询订单信息",httpMethod = "POST")
     public JSONResult update(@ApiParam(name = "userId",value = "用户id",required = true)
                                @RequestParam("userId") String userId,
-                             @RequestParam(value = "orderId",required = false) String orderId) {
+                             @RequestParam(value = "orderId",required = false) String orderId,HttpServletRequest request
+    ) {
         JSONResult jsonResult = checkUserOrder(userId, orderId);
         if (jsonResult.getStatus() != HttpStatus.OK.value()) {
             return jsonResult;
