@@ -4,6 +4,7 @@ import com.gxb.controller.BaseController;
 import com.gxb.pojo.Orders;
 import com.gxb.pojo.Users;
 import com.gxb.pojo.bo.center.CenterUserBO;
+import com.gxb.pojo.vo.OrderStatusCountsVO;
 import com.gxb.resource.FileUpLoad;
 import com.gxb.service.center.CenterUserService;
 import com.gxb.service.center.MyOrdersService;
@@ -104,6 +105,38 @@ public class MyOrdersController extends BaseController {
             return jsonResult.errorMsg("订单删除失败!");
         }
         return JSONResult.ok();
+    }
+
+    @PostMapping("statusCounts")
+    @ApiOperation(value = "获得订单状态书概况",notes = "获得订单状态书概况",httpMethod = "POST")
+    public JSONResult statusCounts(@ApiParam(name = "userId",value = "用户id",required = true)
+                                   @RequestParam("userId") String userId) {
+        if (StringUtils.isBlank(userId)) {
+            return JSONResult.errorMsg(null);
+        }
+        OrderStatusCountsVO orderStatusCounts = myOrdersService.getOrderStatusCounts(userId);
+        return JSONResult.ok(orderStatusCounts);
+    }
+
+    @PostMapping("trend")
+    @ApiOperation(value = "查询订单动向",notes = "查询订单动向",httpMethod = "POST")
+    public JSONResult update(@ApiParam(name = "userId",value = "用户id",required = true)
+                             @RequestParam("userId") String userId,
+                             Integer page,
+                             Integer pageSize,
+                             HttpServletRequest request,
+                             HttpServletResponse response) {
+        if (StringUtils.isBlank(userId)) {
+            return JSONResult.errorMsg( null);
+        }
+        if (page == null || page <= 0) {
+            page = 1;
+        }
+        if (pageSize == null || pageSize <= 0) {
+            pageSize = COMMON_PAGE_SIZE;
+        }
+        PagedGridResult ordersTrend = myOrdersService.getOrdersTrend(userId, page, pageSize);
+        return JSONResult.ok(ordersTrend);
     }
 
 }

@@ -6,7 +6,7 @@
   SELECT
       ic.comment_level commentLevel,
       ic.content content,
-      ic.spec_name specName,
+      ic.sepc_name specName,
       ic.created_time createdTime,
       u.face userFace,
       u.nickname nickname

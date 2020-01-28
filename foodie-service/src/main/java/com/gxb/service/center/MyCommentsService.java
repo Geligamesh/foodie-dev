@@ -1,6 +1,8 @@
 package com.gxb.service.center;
 
 import com.gxb.pojo.OrderItems;
+import com.gxb.pojo.bo.center.OrderItemsCommentBO;
+import com.gxb.utils.PagedGridResult;
 
 import java.util.List;
 
@@ -12,4 +14,14 @@ public interface MyCommentsService {
      * @return
      */
     List<OrderItems> queryPendingComment(String orderId);
+
+    /**
+     * 保存用户的评论
+     * @param orderId
+     * @param userId
+     * @param orderItemsCommentBOS
+     */
+    void saveComments(String orderId, String userId, List<OrderItemsCommentBO> orderItemsCommentBOS);
+
+    PagedGridResult queryMyComments(String userId,Integer page,Integer pageSize);
 }

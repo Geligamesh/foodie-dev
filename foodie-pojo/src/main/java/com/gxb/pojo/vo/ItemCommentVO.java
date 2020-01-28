@@ -30,11 +30,11 @@ public class ItemCommentVO {
         this.content = content;
     }
 
-    public String getSpecName() {
+    public String getSepcName() {
         return specName;
     }
 
-    public void setSpecName(String specName) {
+    public void setSepcName(String specName) {
         this.specName = specName;
     }
 

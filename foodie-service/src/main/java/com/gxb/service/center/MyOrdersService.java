@@ -1,6 +1,7 @@
 package com.gxb.service.center;
 
 import com.gxb.pojo.Orders;
+import com.gxb.pojo.vo.OrderStatusCountsVO;
 import com.gxb.utils.PagedGridResult;
 
 public interface MyOrdersService {
@@ -31,4 +32,13 @@ public interface MyOrdersService {
     boolean updateReceiveOrderStatus(String orderId);
 
     boolean deleteOrder(String userId,String orderId);
+
+    /**
+     * 查询用户的订单数
+     * @param userId
+     */
+    OrderStatusCountsVO getOrderStatusCounts(String userId);
+
+    PagedGridResult getOrdersTrend(String userId,Integer page,Integer pageSize);
+
 }
