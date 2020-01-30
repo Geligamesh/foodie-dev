@@ -97,7 +97,7 @@ ORDER BY
 
     <select id="getMyOrderStatusCounts" parameterType="Map" resultType="int">
         SELECT
-            COUNT( 1 )
+            COUNT(1)
         FROM
             orders o
             LEFT JOIN order_status os ON o.id = os.order_id
