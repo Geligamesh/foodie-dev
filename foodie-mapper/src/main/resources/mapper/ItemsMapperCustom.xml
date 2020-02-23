@@ -21,7 +21,7 @@
   </select>
 
 
-    <!--&#45;&#45;                 k:默认,代表默认排序,根据name-->
+    <!--&#45;&#45;         ReentrantLock        k:默认,代表默认排序,根据name-->
     <!--&#45;&#45;                 c:根据销量排序-->
     <!--&#45;&#45;                 p:根据价格排序-->
     <select id="searchItems" parameterType="map" resultType="com.gxb.pojo.vo.SearchItemsVO">
