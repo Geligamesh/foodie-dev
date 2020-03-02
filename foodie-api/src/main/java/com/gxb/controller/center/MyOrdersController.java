@@ -139,4 +139,10 @@ public class MyOrdersController extends BaseController {
         return JSONResult.ok(ordersTrend);
     }
 
+    public static void main(String[] args) {
+        String[] str = {"a","b","c"};
+        String join = String.join(",", str);
+        System.out.println(join);
+
+    }
 }
